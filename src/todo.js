@@ -1,5 +1,6 @@
 import React from 'react';
-import { Input, List } from 'antd';
+import { Input, List, DatePicker } from 'antd';
+import { CloseCircleOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 
 export default class Todo extends React.Component {
@@ -14,7 +15,9 @@ export default class Todo extends React.Component {
     handlePressEnter = e => {
         const todo = {
             index: this.state.todos.length,
-            content: e.target.value
+            content: e.target.value,
+            date: null,
+            dateString: ""
         };
         const newTodos = this.state.todos.concat(todo);
 
@@ -39,6 +42,16 @@ export default class Todo extends React.Component {
         });
     };
 
+    setDate = (index, date, dateString) => {
+      let newTodos = [...this.state.todos];
+      newTodos[index].date = date;
+      newTodos[index].dateString = dateString;
+
+      this.setState({
+        todos: newTodos
+      });
+    };
+
     render() {
         return (
             <div className="todoContainer">
@@ -52,9 +65,10 @@ export default class Todo extends React.Component {
                     locale={{ emptyText: "No Todo items" }}
                     dataSource={this.state.todos}
                     renderItem={item => (
-                        <List.Item
+                        <TodoItem
                             todo = {item}
                             removeTodo = {this.removeTodo}
+                            setDate = {this.setDate}
                         />
                     )}
                 />
@@ -62,4 +76,34 @@ export default class Todo extends React.Component {
         );
     }
 }
+
+class TodoItem extends React.Component {
+    remove = () => {
+      this.props.removeTodo(this.props.todo.index);
+    };
+   
+    handleDateChange = ( date, dateString ) => {
+      this.props.setDate(this.props.todo.index, date, dateString);
+    }
+  
+    render() {
+      return (
+        <List.Item
+          actions={[
+            <DatePicker
+              format = "DD/MM/YYYY"
+              onChange = {this.handleDateChange}
+              value = {this.props.todo.date}
+            />,  
+            <CloseCircleOutlined 
+              theme="filled"
+              onClick={this.remove}
+            />
+          ]}
+        >
+          {this.props.todo.content}
+        </List.Item>
+      );
+    }
+  }
 
