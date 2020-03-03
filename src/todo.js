@@ -55,13 +55,14 @@ export default class Todo extends React.Component {
     render() {
         return (
             <div className="todoContainer">
-                <h1>TODO App</h1>
+                <h1 style={{color:"#1A84C5"}}>TODO App</h1>
 
                 <Input 
                     placeholder="What needs to be done"
                     onPressEnter={this.handlePressEnter}
                 />    
                 <List 
+                    bordered
                     locale={{ emptyText: "No Todo items" }}
                     dataSource={this.state.todos}
                     renderItem={item => (
@@ -95,8 +96,7 @@ class TodoItem extends React.Component {
               onChange = {this.handleDateChange}
               value = {this.props.todo.date}
             />,  
-            <CloseCircleOutlined 
-              theme="filled"
+            <CloseCircleOutlined style={{fontSize:"30px", color:"#E32E36"}} 
               onClick={this.remove}
             />
           ]}
